@@ -31,7 +31,6 @@
 
       header > h1.ui.header{
         font-weight: normal;
-        display: inline;
         line-height: 50px;
         margin-left: 25px;
       }
@@ -59,6 +58,39 @@
         background-color: #666 !important;
         background-image: none !important;
       }
+
+      @media (max-width: 600px) {
+        #map {
+          width: 100%;
+        }
+
+        #sidebar > p, #sidebar > h4, #sidebar > .slider-container {
+          display: none;
+        }
+
+        header > a{
+          position: fixed;
+          bottom: 30px;
+          left: 0;
+        }
+
+        header img {
+          height: 20px;
+        }
+        
+        header > h1.ui.header {
+          font-size: 1.5em;
+          text-align: center;
+          margin: 0;
+        }
+
+        #legend {
+          display: block !important;
+          position: fixed;
+          top: 90px;
+          right: 10px;
+        };
+      }
     </style>
   </head>
 
@@ -71,7 +103,7 @@
     <div id="sidebar">
       <p>This map shows changing house prices from 2010 to present by postcode. It looks at changing sale prices for <i>individual properties</i>, instead of changing median price for all properties in the postcode.</p>
       <p>To calculate the value for each postcode, we looked at the earliest sale from 2010-2013 and the most recent sale from 2014-Present for each properties. For properties that had at least one sale in each time period, we subtracted the prices to get the difference. We then took the median difference for each postcode for the map.</p>
-      <div class="ui segment">
+      <div id="legend" class="ui segment">
         <h4 class="ui header">Change in Sale Price</h4>
         <div class="ui large list">
           <div class="item">
