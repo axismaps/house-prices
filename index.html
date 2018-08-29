@@ -13,9 +13,26 @@
         padding: 0;
       }
 
+      header {
+        height: 50px;
+        width: 100%;
+      }
+
+      header img{
+        float: right;
+        height: 30px;
+        margin: 10px;
+      }
+
+      header > h1.ui.header{
+        display: inline;
+        line-height: 50px;
+        margin-left: 10px;
+      }
+
       #map {
         position: absolute;
-        top: 0;
+        top: 50px;
         right: 0;
         bottom: 0;
         width: 80%;
@@ -24,9 +41,12 @@
   </head>
 
   <body>
+    <header>
+      <h1 class="ui header">House Prices: 2010 to Present</h1>
+      <a href="https://www.axismaps.com/" target="_blank"><img src="https://www.axismaps.com/images/logo.png"></a>
+    </header>
     <div id='map'></div>
     <div id="sidebar">
-      <h1>House prices map</h1>
       <h2>House Price 1</h2>
       <input type="hidden" id="slider--price1" name="price1" class="slider-input" value="0,500"/>
       <h2>House Price 2</h2>
