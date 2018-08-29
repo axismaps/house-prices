@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <title>Display a map</title>
+    <title>Change in House Prices - Axis Maps</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link rel="stylesheet" type="text/css" href="public/mapbox-gl.css" />
     <link rel="stylesheet" type="text/css" href="public/mapbox-gl-geocoder.css" />
@@ -88,14 +88,14 @@
         <i class="filter icon"></i>
         <div class="content">Filter Data</div>
       </h4>
+      <h4 class="ui header">Price Difference</h4>
+      <input type="hidden" id="slider--diff" name="diff" class="slider-input" value="-50,100"/>
+      <br>
       <h4 class="ui header">House Price 2010 - 2013</h4>
       <input type="hidden" id="slider--price1" name="price1" class="slider-input" value="0,500"/>
       <br>
       <h4 class="ui header">House Price 2014 - Present</h4>
       <input type="hidden" id="slider--price2" name="price2" class="slider-input" value="0,500"/>
-      <br>
-      <h4 class="ui header">Difference</h4>
-      <input type="hidden" id="slider--diff" name="diff" class="slider-input" value="-50,100"/>
     </div>
     
     <script src="public/mapbox-gl.js"></script>
