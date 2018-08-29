@@ -5,6 +5,7 @@
     <title>Display a map</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link rel="stylesheet" type="text/css" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/jquery-range/jquery.range.css" />
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <style>
       body {
@@ -19,33 +20,25 @@
         bottom: 0;
         width: 80%;
       }
-
-      .ui.container{
-        position: fixed;
-        left: 0;
-        height: 100%;
-        width: 20%;
-        padding: 15px;
-        box-sizing: border-box;
-        overflow-y: auto;
-      }
-
-      .ui.cards > .card > .content{
-        border-top: 5px solid !important;
-      }
     </style>
   </head>
 
   <body>
     <div id='map'></div>
-
-    <div class="ui container">
-      <div class="ui cards"></div>
+    <div id="sidebar">
+      <h1>House prices map</h1>
+      <h2>House Price 1</h2>
+      <input type="hidden" id="slider--price1" name="price1" class="slider-input" value="0,500"/>
+      <h2>House Price 2</h2>
+      <input type="hidden" id="slider--price2" name="price2" class="slider-input" value="0,500"/>
+      <h2>Difference</h2>
+      <input type="hidden" id="slider--diff" name="diff" class="slider-input" value="-50,100"/>
     </div>
     
     <script src="node_modules/mapbox-gl/dist/mapbox-gl.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/underscore/underscore-min.js"></script>
+    <script src="node_modules/jquery-range/jquery.range-min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
     <script>
       mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
@@ -56,36 +49,98 @@
         zoom: 6.2
       });
 
-      let popup = '';
-      const cards = {};
+      let prev = '';
+      const popup = new mapboxgl.Popup({
+          closeButton: false
+      });
 
       map.on('mousemove', function (e) {
         const point = _.filter(map.queryRenderedFeatures(e.point), f => f.layer.id === 'pricessingle');
         if(point.length) {
           const props = point[0].properties;
-          if (props.postcode !== popup) {
-            popup = props.postcode;
-            $(`#card--${popup.replace(' ', '')}`).remove();
-            let $card = $(
-              `<div class="card" id="card--${popup.replace(' ', '')}">
-                <div class="content" style="border-color: ${getColor(point[0])} !important">
-                  <div class="header">${props.postcode}</div>
-                  <div class="meta">${props.place}</div>
-                  <div class="description">
-                    <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
-                    <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
-                    <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per.toLocaleString('en')}%)</b></p>
-                  </div>
-                </div>
-                <a class="ui bottom attached button" href="http://landregistry.data.gov.uk/data/ppi/transaction-record.html?_page=0&transactionId=&newBuild=&transactionDate=&min-transactionDate=&max-transactionDate=&pricePaid=&min-pricePaid=&max-pricePaid=&type.label=&estateType.prefLabel=&hasTransaction=&propertyAddress.county=&propertyAddress.district=&propertyAddress.locality=&propertyAddress.paon=&propertyAddress.postcode=${encodeURI(props.postcode)}" target="_blank">
-                  <i class="add icon"></i>More info
-                </a>
-              </div>`);
-            $('.ui.cards').prepend($card);
-            if ($('.card').length > 20) $('.card').last().remove();
+          if (props.postcode !== prev) {
+            prev = props.postcode;
+            let html =
+              `<div class="header">${props.postcode}</div>
+                <div class="meta">${props.place}</div>
+                <div class="description">
+                  <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
+                  <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
+                  <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per > 0 ? '+' : ''}${(props.diff_per * 100).toLocaleString('en')}%)</b></p>
+                </div>`;
+
+            popup.setLngLat(e.lngLat)
+              .setHTML(html)
+              .addTo(map);
           }
+        } else {
+          popup.remove();
+          prev = '';
         }
       });
+
+      map.on('load', function () {
+        $('#slider--price1').jRange({
+          from: 0,
+          to: 500,
+          step: .01,
+          scale: [0, '£250,000', '£500,000+'],
+          format: function (v) {
+            return `£${(v * 1000).toLocaleString('en')}`
+          },
+          width: 200,
+          showLabels: true,
+          isRange : true,
+          onstatechange: function (e) {
+            const a = e.split(',').map(e => e * 1000);
+            if (a[1] === 500000) a[1] = 999999999999;
+            updateFilter(a, 'price1');
+          }
+        });
+        $('#slider--price2').jRange({
+          from: 0,
+          to: 500,
+          step: 1,
+          scale: [0, '£250,000', '£500,000+'],
+          format: function (v) {
+            return `£${(v * 1000).toLocaleString('en')}`
+          },
+          width: 200,
+          showLabels: true,
+          isRange : true,
+          onstatechange: function (e) {
+            const a = e.split(',').map(e => e * 1000);
+            if (a[1] === 500000) a[1] = 999999999999;
+            updateFilter(a, 'price2');
+          }
+        });
+        $('#slider--diff').jRange({
+          from: -50,
+          to: 100,
+          step: .01,
+          scale: ['-£50,000', 0, '£50,000', '£100,000'],
+          format: function (v) {
+            return (v * 1000).toLocaleString('en')
+          },
+          width: 200,
+          showLabels: true,
+          isRange : true,
+          onstatechange: function (e) {
+            const a = e.split(',').map(e => e * 1000);
+            if (a[0] === -50000) a[0] = -999999999999;
+            if (a[1] === 100000) a[1] = 999999999999;
+            updateFilter(a, 'diff');
+          }
+        });
+      });
+
+      function updateFilter(e, field) {
+        let filter = map.getFilter('pricessingle') ? _.filter(_.rest(map.getFilter('pricessingle')), f => f[1] != field) : [];
+        filter.unshift('all');
+        filter.push(['>=', field, e[0]]);
+        filter.push(['<=', field, e[1]]);
+        map.setFilter('pricessingle', filter);
+      }
 
       function getColor(p) {
         const colors = _.rest(p.layer.paint['circle-color'], 3);
