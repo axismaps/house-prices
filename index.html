@@ -1,28 +1,86 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8' />
-  <title>Display a map</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
-  <style>
-    body { margin:0; padding:0; }
-    #map { position:absolute; top:0; bottom:0; width:100%; }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset='utf-8' />
+    <title>Display a map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="stylesheet" type="text/css" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-<div id='map'></div>
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/axismaps/cjlewo81b8n7k2soco4pm67bv',
-  center: [-1.378274, 50.899026],
-  zoom: 16.7
-});
-</script>
+      #map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 80%;
+      }
 
-</body>
+      .ui.container{
+        position: fixed;
+        left: 0;
+        height: 100%;
+        width: 20%;
+        padding: 15px;
+        box-sizing: border-box;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id='map'></div>
+
+    <div class="ui container">
+      <div class="ui cards"></div>
+    </div>
+    
+    <script src="node_modules/mapbox-gl/dist/mapbox-gl.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/underscore/underscore-min.js"></script>
+    <script src="semantic/dist/semantic.min.js"></script>
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoiYXhpc21hcHMiLCJhIjoieUlmVFRmRSJ9.CpIxovz1TUWe_ecNLFuHNg';
+      const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/axismaps/cjlewo81b8n7k2soco4pm67bv',
+        center: [-2,52.818],
+        zoom: 6.2
+      });
+
+      let popup = '';
+      const cards = {};
+
+      map.on('mousemove', function (e) {
+        const point = _.filter(map.queryRenderedFeatures(e.point), f => f.layer.id === 'pricessingle');
+        if(point.length) {
+          const props = point[0].properties;
+          if (props.postcode !== popup) {
+            popup = props.postcode;
+            $(`#card--${popup.replace(' ', '')}`).remove();
+            let $card = $(
+              `<div class="card" id="card--${popup.replace(' ', '')}">
+                <div class="content">
+                  <div class="header">${props.postcode}</div>
+                  <div class="meta">${props.place}</div>
+                  <div class="description">
+                    <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
+                    <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
+                    <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per.toLocaleString('en')}%)</b></p>
+                  </div>
+                </div>
+              </div>`);
+            $('.ui.cards').prepend($card);
+            if ($('.card').length > 20) $('.card').last().remove();
+          }
+        }
+      });
+    </script>
+  </body>
 </html>
+
+<!-- http://landregistry.data.gov.uk/data/ppi/transaction-record.html?_page=0&transactionId=&newBuild=&transactionDate=&min-transactionDate=&max-transactionDate=&pricePaid=&min-pricePaid=&max-pricePaid=&type.label=&estateType.prefLabel=&hasTransaction=&propertyAddress.county=&propertyAddress.district=&propertyAddress.locality=&propertyAddress.paon=&propertyAddress.postcode=WS7+9BG -->

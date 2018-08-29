@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/axismaps/house-prices#readme",
   "dependencies": {
-    "semantic-ui": "^2.3.3"
+    "jquery": "^3.3.1",
+    "mapbox-gl": "^0.48.0",
+    "semantic-ui": "^2.3.3",
+    "underscore": "^1.9.1"
   }
 }
