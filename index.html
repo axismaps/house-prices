@@ -29,6 +29,10 @@
         box-sizing: border-box;
         overflow-y: auto;
       }
+
+      .ui.cards > .card > .content{
+        border-top: 5px solid !important;
+      }
     </style>
   </head>
 
@@ -64,7 +68,7 @@
             $(`#card--${popup.replace(' ', '')}`).remove();
             let $card = $(
               `<div class="card" id="card--${popup.replace(' ', '')}">
-                <div class="content">
+                <div class="content" style="border-color: ${getColor(point[0])} !important">
                   <div class="header">${props.postcode}</div>
                   <div class="meta">${props.place}</div>
                   <div class="description">
@@ -79,6 +83,17 @@
           }
         }
       });
+
+      function getColor(p) {
+        const colors = _.rest(p.layer.paint['circle-color'], 3);
+        let color;
+        for (var i = 0; i < colors.length; i += 2) {
+          if (p.properties.diff_per >= colors[i]) {
+            color = colors[i + 1];
+          }
+        }
+        return color;
+      }
     </script>
   </body>
 </html>
