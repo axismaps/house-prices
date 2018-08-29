@@ -151,8 +151,9 @@
           if (props.postcode !== prev) {
             prev = props.postcode;
             let html =
-              `<div class="header">${props.postcode}</div>
-                <div class="meta">${props.place}</div>
+              `<div class="header"><b>${props.postcode}</b></div>
+                <div class="meta">${props.place}&nbsp;</div>
+                <br>
                 <div class="description">
                   <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
                   <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
