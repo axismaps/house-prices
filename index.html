@@ -19,29 +19,11 @@
         bottom: 0;
         width: 80%;
       }
-
-      .ui.container{
-        position: fixed;
-        left: 0;
-        height: 100%;
-        width: 20%;
-        padding: 15px;
-        box-sizing: border-box;
-        overflow-y: auto;
-      }
-
-      .ui.cards > .card > .content{
-        border-top: 5px solid !important;
-      }
     </style>
   </head>
 
   <body>
     <div id='map'></div>
-
-    <div class="ui container">
-      <div class="ui cards"></div>
-    </div>
     
     <script src="node_modules/mapbox-gl/dist/mapbox-gl.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -56,34 +38,32 @@
         zoom: 6.2
       });
 
-      let popup = '';
-      const cards = {};
+      let prev = '';
+      const popup = new mapboxgl.Popup({
+          closeButton: false
+      });
 
       map.on('mousemove', function (e) {
         const point = _.filter(map.queryRenderedFeatures(e.point), f => f.layer.id === 'pricessingle');
         if(point.length) {
           const props = point[0].properties;
-          if (props.postcode !== popup) {
-            popup = props.postcode;
-            $(`#card--${popup.replace(' ', '')}`).remove();
-            let $card = $(
-              `<div class="card" id="card--${popup.replace(' ', '')}">
-                <div class="content" style="border-color: ${getColor(point[0])} !important">
-                  <div class="header">${props.postcode}</div>
-                  <div class="meta">${props.place}</div>
-                  <div class="description">
-                    <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
-                    <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
-                    <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per.toLocaleString('en')}%)</b></p>
-                  </div>
-                </div>
-                <a class="ui bottom attached button" href="http://landregistry.data.gov.uk/data/ppi/transaction-record.html?_page=0&transactionId=&newBuild=&transactionDate=&min-transactionDate=&max-transactionDate=&pricePaid=&min-pricePaid=&max-pricePaid=&type.label=&estateType.prefLabel=&hasTransaction=&propertyAddress.county=&propertyAddress.district=&propertyAddress.locality=&propertyAddress.paon=&propertyAddress.postcode=${encodeURI(props.postcode)}" target="_blank">
-                  <i class="add icon"></i>More info
-                </a>
-              </div>`);
-            $('.ui.cards').prepend($card);
-            if ($('.card').length > 20) $('.card').last().remove();
+          if (props.postcode !== prev) {
+            prev = props.postcode;
+            let html =
+              `<div class="header">${props.postcode}</div>
+                <div class="meta">${props.place}</div>
+                <div class="description">
+                  <p>Price 2010 - 2013<br><b>£${props.price1.toLocaleString('en')}</b></p>
+                  <p>Price 2014 - Present<br><b>£${props.price2.toLocaleString('en')}</b></p>
+                  <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per > 0 ? '+' : ''}${(props.diff_per * 100).toLocaleString('en')}%)</b></p>
+                </div>`;
+
+            popup.setLngLat(e.lngLat)
+              .setHTML(html)
+              .addTo(map);
           }
+        } else {
+          popup.remove();
         }
       });
 
