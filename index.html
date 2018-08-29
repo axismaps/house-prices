@@ -77,6 +77,9 @@
                     <p>Difference<br><b>£${props.diff.toLocaleString('en')} (${props.diff_per.toLocaleString('en')}%)</b></p>
                   </div>
                 </div>
+                <a class="ui bottom attached button" href="http://landregistry.data.gov.uk/data/ppi/transaction-record.html?_page=0&transactionId=&newBuild=&transactionDate=&min-transactionDate=&max-transactionDate=&pricePaid=&min-pricePaid=&max-pricePaid=&type.label=&estateType.prefLabel=&hasTransaction=&propertyAddress.county=&propertyAddress.district=&propertyAddress.locality=&propertyAddress.paon=&propertyAddress.postcode=${encodeURI(props.postcode)}" target="_blank">
+                  <i class="add icon"></i>More info
+                </a>
               </div>`);
             $('.ui.cards').prepend($card);
             if ($('.card').length > 20) $('.card').last().remove();
@@ -97,5 +100,3 @@
     </script>
   </body>
 </html>
-
-<!-- http://landregistry.data.gov.uk/data/ppi/transaction-record.html?_page=0&transactionId=&newBuild=&transactionDate=&min-transactionDate=&max-transactionDate=&pricePaid=&min-pricePaid=&max-pricePaid=&type.label=&estateType.prefLabel=&hasTransaction=&propertyAddress.county=&propertyAddress.district=&propertyAddress.locality=&propertyAddress.paon=&propertyAddress.postcode=WS7+9BG -->
