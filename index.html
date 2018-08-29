@@ -28,7 +28,7 @@
       header > h1.ui.header{
         display: inline;
         line-height: 50px;
-        margin-left: 10px;
+        margin-left: 25px;
       }
 
       #sidebar{
@@ -36,7 +36,7 @@
         padding: 25px 0 0 25px;
       }
 
-      #sidebar h4{
+      #sidebar > h4{
         margin: 25px 0 20px -3px;
       }
 
@@ -59,10 +59,35 @@
     <div id="sidebar">
       <p>This map shows changing house prices from 2010 to present by postcode. It looks at changing sale prices for <i>individual properties</i>, instead of changing median price for all properties in the postcode.</p>
       <p>We looked at sales between 2010 - 2013 and 2014 - Present and calculated the difference in sale price then took the median difference by postcode to get a final value. The resulting map shows what we would expect, tremendous gains in London with the North lagging behind or losing value.</p>
-      <h3 class="ui header">
+      <div class="ui segment">
+        <h4 class="ui header">Change in Sale Price</h4>
+        <div class="ui large list">
+          <div class="item">
+            <i class="circle icon" style="color: #ff8a8a"></i>
+            <div class="content">10%+ Loss</div>
+          </div>
+          <div class="item">
+            <i class="circle icon" style="color: #995e5e"></i>
+            <div class="content">5% Loss</div>
+          </div>
+          <div class="item">
+            <i class="circle icon" style="color: #333333"></i>
+            <div class="content">No Change</div>
+          </div>
+          <div class="item">
+            <i class="circle icon" style="color: #549188"></i>
+            <div class="content">50% Gain</div>
+          </div>
+          <div class="item">
+            <i class="circle icon" style="color: #75efdd"></i>
+            <div class="content">100%+ Gain</div>
+          </div>
+        </div>
+      </div>
+      <h4 class="ui header">
         <i class="filter icon"></i>
         <div class="content">Filter Data</div>
-      </h3>
+      </h4>
       <h4 class="ui header">House Price 2010 - 2013</h4>
       <input type="hidden" id="slider--price1" name="price1" class="slider-input" value="0,500"/>
       <br>
