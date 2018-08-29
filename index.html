@@ -5,6 +5,7 @@
     <title>Display a map</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <link rel="stylesheet" type="text/css" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css" />
     <link rel="stylesheet" type="text/css" href="node_modules/jquery-range/jquery.range.css" />
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <style>
@@ -71,6 +72,7 @@
     </div>
     
     <script src="node_modules/mapbox-gl/dist/mapbox-gl.js"></script>
+    <script src="node_modules/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.min.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/underscore/underscore-min.js"></script>
     <script src="node_modules/jquery-range/jquery.range-min.js"></script>
@@ -81,8 +83,16 @@
         container: 'map',
         style: 'mapbox://styles/axismaps/cjlewo81b8n7k2soco4pm67bv',
         center: [-2,52.818],
-        zoom: 6.2
+        zoom: 6.2,
+        minZoom: 6,
+        maxZoom: 15,
+        maxBounds: [[-6.3,49.9], [1.8,55.8]]
       });
+
+      map.addControl(new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        country: 'gb'
+      }));
 
       let prev = '';
       const popup = new mapboxgl.Popup({

@@ -20,6 +20,7 @@
     "jquery": "^3.3.1",
     "jquery-range": "github:nitinhayaran/jRange",
     "mapbox-gl": "^0.48.0",
+    "mapbox-gl-geocoder": "^2.0.1",
     "semantic-ui": "^2.3.3",
     "underscore": "^1.9.1"
   }
