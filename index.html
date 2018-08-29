@@ -30,12 +30,21 @@
         margin-left: 10px;
       }
 
+      #sidebar{
+        width: 240px;
+        padding: 25px 0 0 25px;
+      }
+
+      #sidebar h4{
+        margin: 25px 0 20px -3px;
+      }
+
       #map {
         position: absolute;
         top: 50px;
         right: 0;
         bottom: 0;
-        width: 80%;
+        width: calc(100% - 260px);
       }
     </style>
   </head>
@@ -47,11 +56,17 @@
     </header>
     <div id='map'></div>
     <div id="sidebar">
-      <h2>House Price 1</h2>
+      <h3 class="ui header">
+        <i class="filter icon"></i>
+        <div class="content">Filter Data</div>
+      </h3>
+      <h4 class="ui header">House Price 1</h4>
       <input type="hidden" id="slider--price1" name="price1" class="slider-input" value="0,500"/>
-      <h2>House Price 2</h2>
+      <br>
+      <h4 class="ui header">House Price 2</h4>
       <input type="hidden" id="slider--price2" name="price2" class="slider-input" value="0,500"/>
-      <h2>Difference</h2>
+      <br>
+      <h4 class="ui header">Difference</h4>
       <input type="hidden" id="slider--diff" name="diff" class="slider-input" value="-50,100"/>
     </div>
     
@@ -138,7 +153,7 @@
           from: -50,
           to: 100,
           step: .01,
-          scale: ['-£50,000', 0, '£50,000', '£100,000'],
+          scale: ['-50,000', 0, '£50,000', '£100,000'],
           format: function (v) {
             return (v * 1000).toLocaleString('en')
           },
