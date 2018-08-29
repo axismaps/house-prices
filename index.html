@@ -86,9 +86,14 @@
         zoom: 6.2,
         minZoom: 6,
         maxZoom: 15,
-        maxBounds: [[-6.3,49.9], [1.8,55.8]]
+        maxBounds: [[-6.3,49.9], [1.8,55.8]],
+        attributionControl: false
       });
-
+      
+      map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+      map.addControl(new mapboxgl.AttributionControl({
+        customAttribution: ['Contains OS data © Crown copyright and database right (2018)', 'Contains HM Land Registry data © Crown copyright and database right 2018. This data is licensed under the Open Government Licence v3.0.']
+      }));
       map.addControl(new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         country: 'gb'
