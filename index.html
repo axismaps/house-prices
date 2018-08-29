@@ -135,6 +135,7 @@
         const point = _.filter(map.queryRenderedFeatures(e.point), f => f.layer.id === 'pricessingle');
         if(point.length) {
           const props = point[0].properties;
+          map.getCanvas().style.cursor = 'pointer';
           if (props.postcode !== prev) {
             prev = props.postcode;
             let html =
@@ -152,6 +153,7 @@
           }
         } else {
           popup.remove();
+          map.getCanvas().style.cursor = '';
           prev = '';
         }
       });
